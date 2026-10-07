@@ -1,0 +1,777 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-mist: #eef2ef;
+  --color-mist-deep: #e3eae5;
+  --color-card: #ffffff;
+  --color-ink: #2b3a35;
+  --color-ink-soft: #7c8c86;
+  --color-ink-faint: #a7b3ae;
+  --color-line: #e8eeea;
+  --color-surface: #ffffff;
+  --color-primary: #2b3a35;
+  --color-on-primary: #ffffff;
+
+  --color-safe: #8fd3b0;
+  --color-safe-deep: #4f9e79;
+  --color-careful: #f3c67a;
+  --color-careful-deep: #b8862f;
+  --color-scam: #f08a7e;
+  --color-scam-deep: #c8574a;
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 24px;
+
+  --shadow-soft: 0 30px 70px -34px rgba(43, 58, 53, 0.22), 0 10px 26px -20px rgba(43, 58, 53, 0.14);
+  --shadow-lift: 0 48px 110px -40px rgba(43, 58, 53, 0.28), 0 16px 40px -28px rgba(43, 58, 53, 0.16);
+  --shadow-inset-soft: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* ---------- dark theme ---------- */
+.dark {
+  --color-mist: #0d1411;
+  --color-mist-deep: #111a16;
+  --color-card: #16201c;
+  --color-ink: #e6efea;
+  --color-ink-soft: #8a9b94;
+  --color-ink-faint: #64766f;
+  --color-line: #223029;
+  --color-surface: #1b2622;
+  --color-primary: #e6efea;
+  --color-on-primary: #101815;
+
+  --shadow-soft: 0 30px 70px -34px rgba(0, 0, 0, 0.7), 0 10px 26px -18px rgba(0, 0, 0, 0.5);
+  --shadow-lift: 0 48px 110px -40px rgba(0, 0, 0, 0.8), 0 16px 40px -26px rgba(0, 0, 0, 0.55);
+  --shadow-inset-soft: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-mist);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(143, 211, 176, 0.4);
+}
+
+textarea,
+input,
+button {
+  font-family: inherit;
+}
+
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(143, 211, 176, 0.35);
+}
+
+/* ---------- theme switching ---------- */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition-property: background-color, color, border-color, box-shadow, fill, stroke !important;
+  transition-duration: 400ms !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-delay: 0s !important;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+/* ---------- ambient background ---------- */
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.ambient span {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  filter: blur(70px);
+  opacity: 0.5;
+}
+
+.dark .ambient span {
+  opacity: 0.3;
+}
+
+.ambient span:nth-child(1) {
+  width: 46vw;
+  height: 46vw;
+  top: -14vw;
+  left: -8vw;
+  background: radial-gradient(circle, rgba(143, 211, 176, 0.55), transparent 70%);
+  animation: drift 26s ease-in-out infinite;
+}
+
+.ambient span:nth-child(2) {
+  width: 40vw;
+  height: 40vw;
+  top: 12vh;
+  right: -12vw;
+  background: radial-gradient(circle, rgba(243, 198, 122, 0.4), transparent 70%);
+  animation: drift 32s ease-in-out infinite reverse;
+}
+
+.ambient span:nth-child(3) {
+  width: 44vw;
+  height: 44vw;
+  bottom: -18vw;
+  left: 22vw;
+  background: radial-gradient(circle, rgba(240, 138, 126, 0.28), transparent 70%);
+  animation: drift 38s ease-in-out infinite;
+}
+
+/* floating soft shapes */
+.float-shape {
+  position: absolute;
+  opacity: 0.5;
+  will-change: transform;
+}
+
+.dark .float-shape {
+  opacity: 0.32;
+}
+
+.float-shape-a {
+  width: 120px;
+  height: 120px;
+  border-radius: 38px;
+  top: 18%;
+  right: 8%;
+  background: linear-gradient(140deg, rgba(143, 211, 176, 0.22), rgba(143, 211, 176, 0.02));
+  animation: floatA 34s ease-in-out infinite;
+}
+
+.float-shape-b {
+  width: 86px;
+  height: 86px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(243, 198, 122, 0.34);
+  top: 58%;
+  left: 6%;
+  animation: floatB 42s ease-in-out infinite;
+}
+
+.float-shape-c {
+  width: 64px;
+  height: 64px;
+  border-radius: 22px;
+  top: 76%;
+  right: 16%;
+  background: linear-gradient(160deg, rgba(240, 138, 126, 0.18), rgba(240, 138, 126, 0.02));
+  animation: floatA 48s ease-in-out infinite reverse;
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3vw, -3vh, 0) scale(1.08);
+  }
+}
+
+@keyframes floatA {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(-26px, 34px, 0) rotate(9deg);
+  }
+  66% {
+    transform: translate3d(22px, -20px, 0) rotate(-6deg);
+  }
+}
+
+@keyframes floatB {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(34px, -42px, 0) scale(1.12);
+  }
+}
+
+/* ---------- entrances ---------- */
+.fade-up {
+  animation: fadeUp 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 600ms ease both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-enter {
+  animation: pageEnter 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.stagger-item {
+  animation: fadeUp 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(90ms + var(--i, 0) * 90ms);
+}
+
+/* ---------- input glow ---------- */
+.input-glow {
+  animation: inputGlow 6.5s ease-in-out infinite;
+}
+
+@keyframes inputGlow {
+  0%,
+  100% {
+    box-shadow: var(--shadow-soft);
+  }
+  50% {
+    box-shadow: 0 34px 84px -30px rgba(79, 158, 121, 0.3), 0 12px 34px -22px rgba(43, 58, 53, 0.16);
+  }
+}
+
+.dark .input-glow {
+  animation: inputGlowDark 6.5s ease-in-out infinite;
+}
+
+@keyframes inputGlowDark {
+  0%,
+  100% {
+    box-shadow: var(--shadow-soft);
+  }
+  50% {
+    box-shadow: 0 34px 90px -30px rgba(143, 211, 176, 0.2), 0 12px 34px -22px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* ---------- magnetic button + press ripple ---------- */
+.magnetic {
+  position: relative;
+  overflow: hidden;
+  transform: translate3d(var(--mx, 0px), var(--my, 0px), 0);
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 320ms ease,
+    background-color 320ms ease, color 320ms ease;
+  will-change: transform;
+}
+
+.press-ripple {
+  position: absolute;
+  top: var(--y, 50%);
+  left: var(--x, 50%);
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.22;
+  pointer-events: none;
+  animation: pressRipple 620ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes pressRipple {
+  from {
+    transform: scale(1);
+    opacity: 0.26;
+  }
+  to {
+    transform: scale(26);
+    opacity: 0;
+  }
+}
+
+/* ---------- scanning ripple ---------- */
+.ripple {
+  position: absolute;
+  left: -8%;
+  width: 116%;
+  height: 42%;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(143, 211, 176, 0.2) 38%,
+    rgba(143, 211, 176, 0.4) 50%,
+    rgba(143, 211, 176, 0.2) 62%,
+    transparent
+  );
+  filter: blur(6px);
+  animation: sweep var(--sweep, 2000ms) cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  will-change: transform;
+}
+
+@keyframes sweep {
+  0% {
+    transform: translate3d(0, -60%, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, 240%, 0);
+    opacity: 0;
+  }
+}
+
+/* ---------- highlighted phrases ---------- */
+.mark {
+  position: relative;
+  border-radius: 10px;
+  padding: 1px 3px;
+  margin: 0 -1px;
+  transition: background-color 700ms ease, color 700ms ease, box-shadow 700ms ease;
+}
+
+.mark-idle {
+  background-color: transparent;
+}
+
+.mark-on {
+  box-shadow: 0 10px 22px -18px rgba(43, 58, 53, 0.5);
+}
+
+.mark-safe {
+  background-color: var(--mark-safe);
+}
+
+.mark-medium {
+  background-color: var(--mark-medium);
+}
+
+.mark-high {
+  background-color: var(--mark-high);
+}
+
+:root {
+  --mark-safe: rgba(143, 211, 176, 0.38);
+  --mark-medium: rgba(243, 198, 122, 0.46);
+  --mark-high: rgba(240, 138, 126, 0.42);
+}
+
+.dark {
+  --mark-safe: rgba(143, 211, 176, 0.24);
+  --mark-medium: rgba(243, 198, 122, 0.22);
+  --mark-high: rgba(240, 138, 126, 0.24);
+}
+
+/* Tailwind inlines shadow colours, so they are re-tinted for dark surfaces. */
+.dark .shadow-soft {
+  --tw-shadow-color: rgba(0, 0, 0, 0.55);
+}
+
+.dark .shadow-lift {
+  --tw-shadow-color: rgba(0, 0, 0, 0.7);
+}
+
+.bubble {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 6px);
+  transform: translateY(10px) scale(0.7);
+  opacity: 0;
+  white-space: nowrap;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 11.5px;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  box-shadow: 0 12px 26px -16px rgba(43, 58, 53, 0.6);
+  animation: bubbleIn 520ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  z-index: 3;
+}
+
+@keyframes bubbleIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ---------- trust dial ---------- */
+.breathe {
+  animation: breathe 1700ms cubic-bezier(0.45, 0, 0.55, 1) 1 both;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.045);
+  }
+}
+
+/* one continuous motion: breathe in, then settle with a soft spring */
+.dial-entrance {
+  animation: dialSettle 1900ms cubic-bezier(0.34, 1.28, 0.5, 1) 120ms both;
+}
+
+@keyframes dialSettle {
+  0% {
+    transform: scale(0.965);
+  }
+  16% {
+    transform: scale(1.035);
+  }
+  32% {
+    transform: scale(1.062);
+  }
+  52% {
+    transform: scale(0.99);
+  }
+  70% {
+    transform: scale(1.018);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.dial-spring {
+  animation: dialSpring 1100ms cubic-bezier(0.34, 1.4, 0.5, 1) 150ms both;
+}
+
+@keyframes dialSpring {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.07);
+  }
+  72% {
+    transform: scale(0.985);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.wash {
+  position: absolute;
+  inset: -40%;
+  border-radius: 999px;
+  opacity: 0;
+  transform: scale(0.55);
+  transition: opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1), transform 1400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wash-on {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.panel-wash {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 1500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.panel-wash-on {
+  transform: scaleX(1);
+}
+
+/* full page wash behind the result screen */
+.page-wash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  animation: pageWash 1600ms ease-out both;
+}
+
+@keyframes pageWash {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* sparkles around the dial for a safe verdict */
+.sparkle {
+  position: absolute;
+  border-radius: 999px;
+  background: var(--color-safe);
+  animation: sparkle 2200ms ease-in-out infinite;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  40% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  60% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+}
+
+/* ---------- verdict glyph ---------- */
+.glyph-draw {
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  animation: drawIn 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes drawIn {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.glyph-glow {
+  animation: glyphGlow 2600ms ease-in-out 900ms infinite;
+}
+
+@keyframes glyphGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 rgba(240, 138, 126, 0));
+  }
+  50% {
+    filter: drop-shadow(0 0 9px rgba(240, 138, 126, 0.55));
+  }
+}
+
+.glyph-pulse {
+  animation: glyphPulse 3000ms ease-in-out 900ms infinite;
+}
+
+@keyframes glyphPulse {
+  0%,
+  100% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* soft, one-time shake for a scam verdict */
+.soft-shake {
+  animation: softShake 620ms cubic-bezier(0.36, 0.07, 0.19, 0.97) 260ms both;
+}
+
+@keyframes softShake {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  20% {
+    transform: translate3d(-5px, 0, 0);
+  }
+  40% {
+    transform: translate3d(4px, 0, 0);
+  }
+  60% {
+    transform: translate3d(-2.5px, 0, 0);
+  }
+  80% {
+    transform: translate3d(1.5px, 0, 0);
+  }
+}
+
+/* step checkmarks drawing in */
+.step-check {
+  stroke-dasharray: 26;
+  stroke-dashoffset: 26;
+  animation: drawIn 620ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(260ms + var(--i, 0) * 130ms);
+}
+
+.step-item {
+  opacity: 0;
+  animation: fadeUp 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(220ms + var(--i, 0) * 130ms);
+}
+
+/* ---------- history drawer ---------- */
+.drawer-panel {
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.drawer-backdrop {
+  transition: opacity 420ms ease;
+}
+
+/* drop overlay */
+.drop-glow {
+  animation: dropGlow 2200ms ease-in-out infinite;
+}
+
+@keyframes dropGlow {
+  0%,
+  100% {
+    box-shadow: 0 30px 70px -34px rgba(79, 158, 121, 0.35), 0 0 0 0 rgba(143, 211, 176, 0.3);
+  }
+  50% {
+    box-shadow: 0 34px 90px -30px rgba(79, 158, 121, 0.5), 0 0 0 14px rgba(143, 211, 176, 0);
+  }
+}
+
+/* floating action button */
+.fab {
+  animation: fabIn 520ms cubic-bezier(0.34, 1.56, 0.64, 1) both, fabFloat 4200ms ease-in-out 900ms infinite;
+}
+
+@keyframes fabIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fabFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* ---------- misc ---------- */
+.hairline {
+  background: linear-gradient(to right, transparent, rgba(43, 58, 53, 0.1), transparent);
+}
+
+.thinking-dot {
+  animation: dotPulse 1400ms ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient span,
+  .float-shape,
+  .ripple,
+  .breathe,
+  .dial-entrance,
+  .dial-spring,
+  .panel-wash,
+  .page-wash,
+  .thinking-dot,
+  .input-glow,
+  .dark .input-glow,
+  .fab,
+  .sparkle,
+  .glyph-glow,
+  .glyph-pulse,
+  .soft-shake {
+    animation: none !important;
+  }
+  .fade-up,
+  .fade-in,
+  .page-enter,
+  .stagger-item,
+  .step-item,
+  .bubble,
+  .press-ripple,
+  .glyph-draw,
+  .step-check {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+  }
+  .stagger-item,
+  .step-item,
+  .page-enter,
+  .bubble {
+    opacity: 1 !important;
+    filter: none !important;
+  }
+}
